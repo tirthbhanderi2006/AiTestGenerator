@@ -5,6 +5,7 @@ import RegisterPage from './pages/RegisterPage';
 import Layout from './components/Layout/Layout';
 import Home from './pages/Home';
 import TestGenerator from './pages/TestGenerator';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/generate" element={<TestGenerator />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
     </Router>
