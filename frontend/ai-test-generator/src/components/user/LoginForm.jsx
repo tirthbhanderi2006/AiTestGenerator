@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Input from '../common/Input';
 import Button from '../common/Button';
+import RegisterButton from '../common/RegisterButton';
+import { authService } from '../../services/authService';
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -59,12 +62,15 @@ const LoginForm = () => {
       setIsLoading(true);
 
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log('Login data:', formData);
-        // Handle successful login (will be connected to auth context later)
+        const response = await authService.login(formData);
+        console.log('Login successful:', response);
+
+        // Show success message and redirect to home
+        alert('Login successful! Redirecting to home page...');
+        navigate('/home');
       } catch (error) {
-        setFormError('Invalid email or password. Please try again.');
+        console.error('Login error:', error);
+        setFormError(error.message || 'Invalid email or password. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -168,9 +174,9 @@ const LoginForm = () => {
       <div className="text-center">
         <p className="text-sm text-gray-600">
           Don't have an account?{' '}
-          <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
+          <RegisterButton className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline bg-transparent hover:bg-transparent px-0 py-0">
             Sign up
-          </Link>
+          </RegisterButton>
         </p>
       </div>
     </div>

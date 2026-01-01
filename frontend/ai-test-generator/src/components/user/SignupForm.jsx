@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Input from '../common/Input';
 import Button from '../common/Button';
+import { authService } from '../../services/authService';
 
 const SignupForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,6 +26,7 @@ const SignupForm = () => {
   });
 
   // Update password strength when password changes
+  // Registration endpoint is localhost:8080/AITestGenerator/api/auth/register
   useEffect(() => {
     if (!formData.password) {
       setPasswordStrength({ score: 0, label: '', color: 'gray' });
@@ -123,12 +126,21 @@ const SignupForm = () => {
       setIsLoading(true);
 
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log('Registration data:', formData);
-        // Handle successful registration (will be connected to auth context later)
+        const userData = {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
+        };
+
+        const response = await authService.register(userData);
+        console.log('Registration successful:', response);
+
+        // Show success message and redirect to login
+        alert('Registration successful! Redirecting to login page...');
+        navigate('/login');
       } catch (error) {
-        setFormError('Registration failed. Please try again.');
+        console.error('Registration error:', error);
+        setFormError(error.message || 'Registration failed. Please try again.');
       } finally {
         setIsLoading(false);
       }
